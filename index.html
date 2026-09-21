@@ -20,7 +20,7 @@
   #menu h1{font-size:36px;font-weight:900;letter-spacing:.42em;color:#00ffee;text-align:center;margin-top:6px;text-shadow:0 0 8px #00ffee,0 0 22px #00ffee,0 0 44px #ff00aa;}
   #menu .sub{text-align:center;font-size:11px;letter-spacing:.36em;color:#ff88dd;margin:8px 0 22px;text-shadow:0 0 10px #ff00aa;}
   .grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;}
-  .card{background:linear-gradient(160deg,rgba(30,10,60,.85),rgba(10,4,26,.9));border:1px solid rgba(0,255,238,.35);border-radius:13px;padding:11px 11px 10px;position:relative;overflow:hidden;transition:.16s;box-shadow:0 0 14px rgba(0,255,238,.10);}
+  .card{background:linear-gradient(160deg,rgba(30,10,60,.85),rgba(10,4,26,.9));border:1px solid rgba(0,255,238,.35);border-radius:13px;padding:11px 11px 10px;position:relative;overflow:hidden;transition:.16s;}
   .card:active{transform:scale(.965);}
   .card.sel{background:linear-gradient(160deg,rgba(60,10,80,.95),rgba(20,4,40,.95));}
   .card .nm{font-size:13px;font-weight:800;line-height:1.15;}
@@ -36,7 +36,7 @@
   #stickZone{position:absolute;left:0;bottom:0;width:52%;height:62%;pointer-events:auto;}
   #thrZone{position:absolute;right:0;top:14%;width:96px;height:60%;pointer-events:auto;display:flex;flex-direction:column;align-items:center;justify-content:center;}
   #thrTrack{position:relative;width:12px;height:78%;border-radius:6px;background:rgba(20,30,50,.7);border:1px solid var(--accent);box-shadow:0 0 12px var(--accent);}
-  #thrFill{position:absolute;bottom:0;left:0;width:100%;border-radius:6px;background:linear-gradient(0deg,var(--accent),var(--accent));box-shadow:0 0 16px var(--accent);}
+  #thrFill{position:absolute;bottom:0;left:0;width:100%;border-radius:6px;background:var(--accent);box-shadow:0 0 16px var(--accent);}
   #thrKnob{position:absolute;left:50%;width:36px;height:20px;margin-left:-18px;border-radius:5px;background:var(--accent);border:2px solid var(--accent);box-shadow:0 0 18px var(--accent);}
   #thrLbl{position:absolute;bottom:-22px;font-size:10px;letter-spacing:.20em;color:var(--accent);text-shadow:0 0 8px var(--accent);}
   .btn{position:absolute;pointer-events:auto;border-radius:11px;border:1px solid var(--accent);background:rgba(5,10,26,.78);color:var(--accent);font-size:10px;font-weight:900;letter-spacing:.10em;display:flex;align-items:center;justify-content:center;text-align:center;line-height:1.1;backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px);box-shadow:0 0 10px var(--accent);}
@@ -55,6 +55,7 @@
   #fps{position:absolute;right:8px;top:calc(env(safe-area-inset-top) + 52px);font-size:9px;color:#5c3a8c;z-index:5;pointer-events:none;letter-spacing:.06em;}
   #loading{position:absolute;inset:0;z-index:20;background:#05060e;display:flex;align-items:center;justify-content:center;color:#00ffee;font-size:12px;letter-spacing:.36em;text-shadow:0 0 14px #00ffee;}
   #toast{position:absolute;left:50%;top:12%;transform:translateX(-50%);z-index:7;pointer-events:none;background:rgba(5,10,26,.85);border:1px solid var(--accent);padding:8px 14px;border-radius:10px;color:var(--accent);font-size:11px;letter-spacing:.12em;font-weight:800;opacity:0;transition:opacity .4s;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);text-align:center;max-width:80%;box-shadow:0 0 22px var(--accent);}
+  #errlog{position:fixed;top:60px;left:8px;right:8px;z-index:999;background:rgba(255,0,0,0.9);color:#fff;font:11px monospace;padding:6px;white-space:pre-wrap;display:none;pointer-events:none;max-height:45vh;overflow:auto;border-radius:6px;}
 </style>
 </head>
 <body>
@@ -95,6 +96,8 @@
   </div>
 </div>
 <div id="loading">INITIALIZING…</div>
+<div id="errlog"></div>
+<script>window.addEventListener('error',function(e){var d=document.getElementById('errlog');if(d){d.style.display='block';d.textContent+='ERR: '+e.message+' @ '+e.lineno+':'+e.colno+'\n';}});</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
 (function(){
@@ -199,15 +202,12 @@ renderer.toneMappingExposure=1.05;
 renderer.outputEncoding=THREE.sRGBEncoding;
 
 const scene=new THREE.Scene();
-/* FIX 3: bluer fog, lower density */
 scene.fog=new THREE.FogExp2(0x8fa8c4,0.000025);
 
 const camera=new THREE.PerspectiveCamera(70,1,0.5,400000);
-/* FIX 3: sun higher in the sky (55 deg up), less pink wash */
 const sunDir=new THREE.Vector3(-0.35,0.55,0.75).normalize();
 
 scene.add(new THREE.HemisphereLight(0x90b0d0,0x40503a,0.60));
-/* FIX 3: cool white key light, lower intensity */
 const key=new THREE.DirectionalLight(0xfff2e0,1.4);
 key.position.copy(sunDir).multiplyScalar(1000);
 key.castShadow=true;
@@ -226,13 +226,12 @@ const fill=new THREE.DirectionalLight(0x88aaff,0.35);
 fill.position.set(0.6,-0.2,-0.6).multiplyScalar(1000);
 scene.add(fill);
 
-/* ================= SKY (cool blue) ================= */
+/* ================= SKY ================= */
 (function(){
   const skyGeo=new THREE.SphereGeometry(240000,32,20);
   const skyMat=new THREE.ShaderMaterial({
     side:THREE.BackSide,depthWrite:false,
     uniforms:{
-      /* FIX 3: bluer horizon, no more orange */
       top:{value:new THREE.Color(0x081a3a)},
       mid:{value:new THREE.Color(0x3a6aa0)},
       hor:{value:new THREE.Color(0xa0b0c0)},
@@ -241,25 +240,12 @@ scene.add(fill);
       sunCol:{value:new THREE.Color(0xffe0a0)}
     },
     vertexShader:'varying vec3 vW; void main(){ vW=normalize(position); gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);}',
-    fragmentShader:`
-      uniform vec3 top,mid,hor,low,sunDir,sunCol; varying vec3 vW;
-      void main(){
-        float h=vW.y;
-        vec3 c;
-        if(h<0.0) c=low;
-        else if(h<0.20) c=mix(low,hor,smoothstep(0.0,0.20,h));
-        else if(h<0.55) c=mix(hor,mid,smoothstep(0.20,0.55,h));
-        else c=mix(mid,top,smoothstep(0.55,1.0,h));
-        float sd=dot(normalize(vW),normalize(sunDir));
-        c+=sunCol*pow(max(sd,0.0),30.0)*0.75;
-        c+=sunCol*pow(max(sd,0.0),4.0)*0.18;
-        gl_FragColor=vec4(c,1.0);
-      }`
+    fragmentShader:'uniform vec3 top,mid,hor,low,sunDir,sunCol; varying vec3 vW; void main(){ float h=vW.y; vec3 c; if(h<0.0) c=low; else if(h<0.20) c=mix(low,hor,smoothstep(0.0,0.20,h)); else if(h<0.55) c=mix(hor,mid,smoothstep(0.20,0.55,h)); else c=mix(mid,top,smoothstep(0.55,1.0,h)); float sd=dot(normalize(vW),normalize(sunDir)); c+=sunCol*pow(max(sd,0.0),30.0)*0.75; c+=sunCol*pow(max(sd,0.0),4.0)*0.18; gl_FragColor=vec4(c,1.0);}'
   });
   scene.add(new THREE.Mesh(skyGeo,skyMat));
 })();
 
-/* Sun disc sprite */
+/* Sun disc */
 (function(){
   const c=document.createElement('canvas'); c.width=256;c.height=256;
   const g=c.getContext('2d');
@@ -313,7 +299,6 @@ function terrainSlope(x,z){
   geo.rotateX(-Math.PI/2);
   const pos=geo.attributes.position;
   const col=new Float32Array(pos.count*3);
-  /* realistic biome colors */
   const cSand=new THREE.Color(0xbaa982),cGrass=new THREE.Color(0x4d6a3c),
         cForest=new THREE.Color(0x2e4a26),cRock=new THREE.Color(0x6a6058),
         cRockD=new THREE.Color(0x3e3630),cSnow=new THREE.Color(0xf0f4f8),
@@ -341,7 +326,6 @@ function terrainSlope(x,z){
   geo.setAttribute('color',new THREE.BufferAttribute(col,3));
   geo.computeVertexNormals();
   const mat=new THREE.MeshStandardMaterial({vertexColors:true,roughness:0.95,metalness:0.0});
-  /* Neon grid baked into terrain shader (fixes flicker) */
   mat.onBeforeCompile=(shader)=>{
     shader.vertexShader='varying vec3 vWPos;\n'+shader.vertexShader.replace(
       '#include <worldpos_vertex>',
@@ -349,17 +333,7 @@ function terrainSlope(x,z){
     );
     shader.fragmentShader='varying vec3 vWPos;\n'+shader.fragmentShader.replace(
       '#include <dithering_fragment>',
-      `#include <dithering_fragment>
-       float gs=500.0;
-       vec2 gW=vWPos.xz/gs;
-       vec2 gf=abs(fract(gW)-0.5)*2.0;
-       float lx=smoothstep(0.94,1.0,gf.x);
-       float ly=smoothstep(0.94,1.0,gf.y);
-       float line=max(lx,ly);
-       float dCam=length(vWPos-cameraPosition);
-       float fade=1.0-smoothstep(1500.0,6500.0,dCam);
-       gl_FragColor.rgb+=vec3(0.0,1.0,0.93)*line*fade*0.55;
-      `
+      '#include <dithering_fragment>\nfloat gs=500.0;\nvec2 gW=vWPos.xz/gs;\nvec2 gf=abs(fract(gW)-0.5)*2.0;\nfloat lx=smoothstep(0.94,1.0,gf.x);\nfloat ly=smoothstep(0.94,1.0,gf.y);\nfloat line=max(lx,ly);\nfloat dCam=length(vWPos-cameraPosition);\nfloat fade=1.0-smoothstep(1500.0,6500.0,dCam);\ngl_FragColor.rgb+=vec3(0.0,1.0,0.93)*line*fade*0.55;'
     );
   };
   const mesh=new THREE.Mesh(geo,mat);
@@ -460,7 +434,7 @@ function terrainSlope(x,z){
   scene.add(dome);
 })();
 
-/* ================= CLOUDS (fewer sprites = less flicker) ================= */
+/* ================= CLOUDS ================= */
 function makeCloudTexture(size,puffs,opacity){
   const c=document.createElement('canvas'); c.width=size;c.height=size;
   const ctx=c.getContext('2d');
@@ -478,7 +452,6 @@ function makeCloudTexture(size,puffs,opacity){
 }
 (function(){
   const tLow=makeCloudTexture(512,30,0.55);
-  /* FIX 2: only 8 low cloud sprites */
   for(let i=0;i<8;i++){
     const m=new THREE.SpriteMaterial({map:tLow,transparent:true,opacity:0.45,depthWrite:false,fog:true,color:0xffffff});
     const sp=new THREE.Sprite(m);
@@ -489,7 +462,6 @@ function makeCloudTexture(size,puffs,opacity){
     scene.add(sp);
   }
   const tMid=makeCloudTexture(512,40,0.65);
-  /* FIX 2: only 15 mid cloud sprites */
   for(let i=0;i<15;i++){
     const m=new THREE.SpriteMaterial({map:tMid,transparent:true,opacity:0.55,depthWrite:false,fog:true,color:0xffffff});
     const sp=new THREE.Sprite(m);
@@ -721,6 +693,7 @@ function showToast(msg,dur){
   toastTimer=setTimeout(()=>{toastEl.style.opacity='0';},dur||2500);
 }
 let selected=0;
+
 JETS.forEach((j,i)=>{
   const d=document.createElement('div');
   const trimHex='#'+j.trim.toString(16).padStart(6,'0');
@@ -734,25 +707,30 @@ JETS.forEach((j,i)=>{
   d.addEventListener('click',()=>selectJet(i));
   grid.appendChild(d);
 });
-/* FIX 1: CSS var updates on select */
+
 function selectJet(i){
-  selected=i;
-  const trimHex='#'+JETS[i].trim.toString(16).padStart(6,'0');
-  document.documentElement.style.setProperty('--accent',trimHex);
-  [...grid.children].forEach((c,k)=>{
-    c.classList.toggle('sel',k===i);
-    const t='#'+JETS[k].trim.toString(16).padStart(6,'0');
-    if(k===i){
-      c.style.borderColor=t;
-      c.style.boxShadow='0 0 24px '+t+'aa';
-    } else {
-      c.style.borderColor=t+'99';
-      c.style.boxShadow='0 0 14px '+t+'40';
+  try{
+    selected=i;
+    const trimHex='#'+JETS[i].trim.toString(16).padStart(6,'0');
+    if(document.documentElement){
+      document.documentElement.style.setProperty('--accent',trimHex);
     }
-  });
+    [...grid.children].forEach((c,k)=>{
+      c.classList.toggle('sel',k===i);
+      const t='#'+JETS[k].trim.toString(16).padStart(6,'0');
+      if(k===i){
+        c.style.borderColor=t;
+        c.style.boxShadow='0 0 24px '+t+'aa';
+      } else {
+        c.style.borderColor=t+'99';
+        c.style.boxShadow='0 0 14px '+t+'40';
+      }
+    });
+  }catch(e){ console.warn('selectJet',e); }
 }
-/* initialize accent on load */
-selectJet(0);
+
+/* deferred initial accent so any DOM hiccup can't block boot */
+setTimeout(function(){try{selectJet(0);}catch(e){console.warn('init select',e);}},60);
 
 /* ================= AUDIO ================= */
 let audio=null,audioReady=false,soundOn=true;
