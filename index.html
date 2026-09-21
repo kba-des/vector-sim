@@ -294,7 +294,7 @@ function getTerrainHeight(x,z){
   geo.rotateX(-Math.PI/2);
   const mat=new THREE.MeshStandardMaterial({color:0x122a42,roughness:0.08,metalness:0.85,transparent:true,opacity:0.96});
   const ocean=new THREE.Mesh(geo,mat);
-  ocean.position.y=RUNWAY_ELEV-6.0;
+  ocean.position.y=-40.0;
   scene.add(ocean);
 })();
 
@@ -549,7 +549,7 @@ const ctrlInput={pitch:0,roll:0,yaw:0,brake:false};
 function resetToRunway(){
   aircraft.pos.set(0,RUNWAY_ELEV+3.5,RW_START_Z-60);
   aircraft.vel.set(0,0,0);
-  aircraft.quat.setFromEuler(new THREE.Euler(0,Math.PI,0,'YXZ')); // Heading 360 North
+  aircraft.quat.setFromEuler(new THREE.Euler(0,0,0,'YXZ')); // Heading 360 North
   aircraft.rates.set(0,0,0);
   aircraft.throttle=0;aircraft.thrTarget=0;aircraft.ab=false;
   aircraft.gear=1;aircraft.gearPos=1;aircraft.flaps=0;aircraft.speedBrake=0;
