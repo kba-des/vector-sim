@@ -324,7 +324,7 @@ function terrainSlope(x,z){
   }
   geo.setAttribute('color',new THREE.BufferAttribute(col,3));
   geo.computeVertexNormals();
-  const mat=new THREE.MeshStandardMaterial({vertexColors:true,roughness:0.95,metalness:0.0});
+  const mat=new THREE.MeshStandardMaterial({vertexColors:true,roughness:0.95,metalness:0.0,polygonOffset:true,polygonOffsetFactor:-2,polygonOffsetUnits:-2});
   mat.onBeforeCompile=(shader)=>{
     shader.vertexShader='varying vec3 vWPos;\n'+shader.vertexShader.replace(
       '#include <worldpos_vertex>',
@@ -357,7 +357,7 @@ function terrainSlope(x,z){
   const g=new THREE.PlaneGeometry(360000,360000,1,1);
   g.rotateX(-Math.PI/2);
   const m=new THREE.MeshStandardMaterial({color:0x1c3f5c,roughness:0.20,metalness:0.55,transparent:true,opacity:0.96});
-  const mesh=new THREE.Mesh(g,m); mesh.position.y=0.10; mesh.receiveShadow=true; scene.add(mesh);
+  const mesh=new THREE.Mesh(g,m); mesh.position.y=2.0; mesh.receiveShadow=true; scene.add(mesh);
 })();
 
 /* ================= RUNWAY ================= */
