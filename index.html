@@ -37,7 +37,7 @@
   #thrZone{position:absolute;right:0;top:14%;width:96px;height:60%;pointer-events:auto;display:flex;flex-direction:column;align-items:center;justify-content:center;}
   #thrTrack{position:relative;width:12px;height:78%;border-radius:6px;background:rgba(20,30,50,.7);border:1px solid var(--accent);box-shadow:0 0 12px var(--accent);}
   #thrFill{position:absolute;bottom:0;left:0;width:100%;border-radius:6px;background:var(--accent);box-shadow:0 0 16px var(--accent);}
-  #thrKnob{position:absolute;left:50%;width:36px;height:20px;margin-left:-18px;border-radius:5px;background:var(--accent);border:2px solid var(--accent);box-shadow:0 0 18px var(--accent);}
+  #thrKnob{position:absolute;left:50%;width:36px;height:20px;margin-left:-18px;border-radius:5px;background:var(--accent);border:2px solid var(--accent);box-shadow:0 0 18px var(--accent);bottom:0;transition:bottom .06s linear;}
   #thrLbl{position:absolute;bottom:-22px;font-size:10px;letter-spacing:.20em;color:var(--accent);text-shadow:0 0 8px var(--accent);}
   .btn{position:absolute;pointer-events:auto;border-radius:11px;border:1px solid var(--accent);background:rgba(5,10,26,.78);color:var(--accent);font-size:10px;font-weight:900;letter-spacing:.10em;display:flex;align-items:center;justify-content:center;text-align:center;line-height:1.1;backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px);box-shadow:0 0 10px var(--accent);}
   .btn:active,.btn.on{background:var(--accent);color:#050010;border-color:var(--accent);box-shadow:0 0 20px var(--accent);}
@@ -107,7 +107,7 @@ const lerp=(a,b,t)=>a+(b-a)*t;
 const smoothstep=(a,b,x)=>{const t=clamp((x-a)/(b-a),0,1);return t*t*(3-2*t);};
 const R2D=180/Math.PI;
 
-/* ================= AIRCRAFT ================= */
+/* ================= AIRCRAFT — exaggerated handling differences ================= */
 const JETS=[
 {id:'f22',name:'F-22A Raptor',gen:'5',flag:'USAF',color:0x8c949e,dark:0x3a4048,trim:0x00ffee,
  L:18.9,R:1.00,exh:0x00ffee,
@@ -116,7 +116,7 @@ const JETS=[
  vtail:{count:2,h:3.35,root:3.8,tip:1.15,sweep:2.6,thick:0.13,f:0.74,x:1.02,cant:0.44},
  canopy:{f:0.30,len:3.6,r:0.78,tint:0x1a2e4a},
  engines:2,eX:1.02,
- perf:{mass:26000,area:78.0,Td:232000,Tab:312000,aStall:0.52,CLa:4.6,gLim:9.0,pRate:1.70,rRate:3.40,yRate:0.58,cd0:0.019,AR:2.36,machMax:2.25}},
+ perf:{mass:26000,area:78.0,Td:232000,Tab:312000,aStall:0.55,CLa:4.6,gLim:9.0,pRate:1.95,rRate:3.9,yRate:0.68,cd0:0.019,AR:2.36,machMax:2.25}},
 {id:'f35',name:'F-35A Lightning II',gen:'5',flag:'USAF',color:0x8b929a,dark:0x3f464e,trim:0x00aaff,
  L:15.7,R:1.05,exh:0x00aaff,
  wing:{span:5.35,root:4.9,tip:1.30,sweep:3.5,thick:0.19,f:0.47,y:-0.14},
@@ -124,7 +124,7 @@ const JETS=[
  vtail:{count:2,h:2.85,root:3.4,tip:1.05,sweep:2.3,thick:0.12,f:0.72,x:0.95,cant:0.42},
  canopy:{f:0.29,len:3.2,r:0.80,tint:0x15263a},
  engines:1,eX:0,
- perf:{mass:21000,area:42.7,Td:128000,Tab:191000,aStall:0.44,CLa:4.4,gLim:9.0,pRate:1.15,rRate:2.65,yRate:0.42,cd0:0.022,AR:2.68,machMax:1.60}},
+ perf:{mass:21000,area:42.7,Td:128000,Tab:191000,aStall:0.58,CLa:4.4,gLim:9.0,pRate:0.95,rRate:2.30,yRate:0.40,cd0:0.022,AR:2.68,machMax:1.60}},
 {id:'su57',name:'Su-57 Felon',gen:'5',flag:'RUAF',color:0x7d8794,dark:0x333a44,trim:0xff6600,
  L:20.1,R:1.15,exh:0xff6600,
  wing:{span:6.95,root:6.4,tip:1.70,sweep:4.6,thick:0.19,f:0.44,y:-0.16},
@@ -132,7 +132,7 @@ const JETS=[
  vtail:{count:2,h:3.20,root:4.0,tip:1.20,sweep:2.8,thick:0.12,f:0.72,x:1.15,cant:0.30},
  canopy:{f:0.27,len:3.9,r:0.82,tint:0x203a2a},
  engines:2,eX:1.05,
- perf:{mass:25500,area:78.8,Td:176000,Tab:284000,aStall:0.50,CLa:4.7,gLim:9.0,pRate:1.62,rRate:3.20,yRate:0.58,cd0:0.020,AR:2.45,machMax:2.00}},
+ perf:{mass:25500,area:78.8,Td:176000,Tab:284000,aStall:0.65,CLa:4.7,gLim:9.0,pRate:2.10,rRate:3.70,yRate:0.78,cd0:0.020,AR:2.45,machMax:2.00}},
 {id:'j20',name:'J-20 Mighty Dragon',gen:'5',flag:'PLAAF',color:0x767f8b,dark:0x323945,trim:0xff0044,
  L:20.4,R:1.10,exh:0xff0044,
  wing:{span:6.80,root:7.6,tip:1.35,sweep:5.2,thick:0.18,f:0.42,y:-0.10},htail:null,
@@ -140,7 +140,7 @@ const JETS=[
  canard:{span:2.35,root:2.9,tip:0.95,sweep:1.9,thick:0.13,f:0.28,y:0.35},
  canopy:{f:0.24,len:3.6,r:0.80,tint:0x1a2e20},
  engines:2,eX:0.95,
- perf:{mass:25000,area:73.0,Td:180000,Tab:294000,aStall:0.48,CLa:4.5,gLim:9.0,pRate:1.35,rRate:2.85,yRate:0.48,cd0:0.021,AR:2.53,machMax:2.00}},
+ perf:{mass:25000,area:73.0,Td:180000,Tab:294000,aStall:0.48,CLa:4.5,gLim:9.0,pRate:1.15,rRate:2.55,yRate:0.45,cd0:0.021,AR:2.53,machMax:2.00}},
 {id:'fa18e',name:'F/A-18E Super Hornet',gen:'4.5',flag:'USN',color:0x88939c,dark:0x3d4450,trim:0x44ff88,
  L:18.3,R:1.02,exh:0x44ff88,
  wing:{span:6.10,root:5.4,tip:1.55,sweep:3.6,thick:0.20,f:0.44,y:-0.16},
@@ -148,7 +148,7 @@ const JETS=[
  vtail:{count:2,h:3.10,root:3.9,tip:1.35,sweep:2.7,thick:0.13,f:0.73,x:1.05,cant:0.35},
  canopy:{f:0.28,len:3.5,r:0.78,tint:0x182a3c},
  engines:2,eX:0.90,
- perf:{mass:21000,area:46.5,Td:124000,Tab:196000,aStall:0.50,CLa:4.5,gLim:7.5,pRate:1.25,rRate:3.00,yRate:0.52,cd0:0.023,AR:3.20,machMax:1.60}},
+ perf:{mass:21000,area:46.5,Td:124000,Tab:196000,aStall:0.52,CLa:4.5,gLim:7.5,pRate:1.30,rRate:3.20,yRate:0.55,cd0:0.023,AR:3.20,machMax:1.60}},
 {id:'f15ex',name:'F-15EX Eagle II',gen:'4.5',flag:'USAF',color:0x8d949a,dark:0x454c56,trim:0xffee00,
  L:19.4,R:1.12,exh:0xffee00,
  wing:{span:6.55,root:5.6,tip:1.45,sweep:3.4,thick:0.21,f:0.42,y:-0.05},
@@ -156,7 +156,7 @@ const JETS=[
  vtail:{count:2,h:3.60,root:4.3,tip:1.45,sweep:2.8,thick:0.14,f:0.76,x:1.05,cant:0.10},
  canopy:{f:0.24,len:3.9,r:0.80,tint:0x1c2e3e},
  engines:2,eX:0.92,
- perf:{mass:21000,area:56.5,Td:158000,Tab:260000,aStall:0.40,CLa:4.6,gLim:9.0,pRate:1.32,rRate:3.00,yRate:0.50,cd0:0.020,AR:3.04,machMax:2.50}},
+ perf:{mass:21000,area:56.5,Td:158000,Tab:260000,aStall:0.42,CLa:4.6,gLim:9.0,pRate:1.35,rRate:2.75,yRate:0.48,cd0:0.020,AR:3.04,machMax:2.50}},
 {id:'typhoon',name:'Eurofighter Typhoon',gen:'4.5',flag:'EU',color:0x929aa3,dark:0x424a54,trim:0xff2288,
  L:15.96,R:0.95,exh:0xff2288,
  wing:{span:5.55,root:7.0,tip:0.95,sweep:4.4,thick:0.17,f:0.38,y:-0.05},htail:null,
@@ -164,7 +164,7 @@ const JETS=[
  canard:{span:2.05,root:3.2,tip:0.80,sweep:2.0,thick:0.13,f:0.26,y:0.42},
  canopy:{f:0.26,len:3.3,r:0.74,tint:0x1e3040},
  engines:2,eX:0.72,
- perf:{mass:16500,area:51.2,Td:120000,Tab:180000,aStall:0.48,CLa:4.6,gLim:9.0,pRate:1.60,rRate:3.60,yRate:0.60,cd0:0.019,AR:2.41,machMax:2.00}},
+ perf:{mass:16500,area:51.2,Td:120000,Tab:180000,aStall:0.62,CLa:4.6,gLim:9.0,pRate:1.95,rRate:4.30,yRate:0.75,cd0:0.019,AR:2.41,machMax:2.00}},
 {id:'rafale',name:'Dassault Rafale C',gen:'4.5',flag:'FR',color:0x7f8894,dark:0x373e48,trim:0xaa44ff,
  L:15.27,R:0.92,exh:0xaa44ff,
  wing:{span:5.20,root:6.4,tip:1.00,sweep:4.0,thick:0.17,f:0.40,y:-0.05},htail:null,
@@ -172,7 +172,7 @@ const JETS=[
  canard:{span:1.95,root:2.6,tip:0.75,sweep:1.7,thick:0.12,f:0.24,y:0.38},
  canopy:{f:0.27,len:3.1,r:0.72,tint:0x1a2c3e},
  engines:2,eX:0.66,
- perf:{mass:15500,area:45.7,Td:100000,Tab:150000,aStall:0.50,CLa:4.6,gLim:9.0,pRate:1.52,rRate:3.40,yRate:0.56,cd0:0.020,AR:2.37,machMax:1.80}},
+ perf:{mass:15500,area:45.7,Td:100000,Tab:150000,aStall:0.60,CLa:4.6,gLim:9.0,pRate:1.90,rRate:4.10,yRate:0.72,cd0:0.020,AR:2.37,machMax:1.80}},
 {id:'gripen',name:'Saab Gripen E',gen:'4.5',flag:'SE',color:0x8a939c,dark:0x3d4450,trim:0x00ff88,
  L:15.2,R:0.86,exh:0x00ff88,
  wing:{span:4.20,root:5.6,tip:0.90,sweep:3.4,thick:0.16,f:0.40,y:-0.02},htail:null,
@@ -180,7 +180,7 @@ const JETS=[
  canard:{span:1.75,root:2.3,tip:0.70,sweep:1.5,thick:0.11,f:0.25,y:0.34},
  canopy:{f:0.28,len:2.9,r:0.70,tint:0x1c3040},
  engines:1,eX:0,
- perf:{mass:12500,area:31.0,Td:62000,Tab:98000,aStall:0.48,CLa:4.5,gLim:9.0,pRate:1.60,rRate:3.60,yRate:0.62,cd0:0.020,AR:2.28,machMax:2.00}},
+ perf:{mass:12500,area:31.0,Td:62000,Tab:98000,aStall:0.58,CLa:4.5,gLim:9.0,pRate:2.15,rRate:4.60,yRate:0.80,cd0:0.020,AR:2.28,machMax:2.00}},
 {id:'su35',name:'Su-35S Flanker-E',gen:'4.5',flag:'RUAF',color:0x7a8794,dark:0x333a44,trim:0xff2200,
  L:21.9,R:1.18,exh:0xff2200,
  wing:{span:7.35,root:6.6,tip:1.60,sweep:4.0,thick:0.21,f:0.42,y:-0.10},
@@ -188,7 +188,7 @@ const JETS=[
  vtail:{count:2,h:3.60,root:4.4,tip:1.35,sweep:2.9,thick:0.14,f:0.74,x:1.25,cant:0.12},
  canopy:{f:0.24,len:4.3,r:0.86,tint:0x1e3428},
  engines:2,eX:1.15,
- perf:{mass:25300,area:62.0,Td:172000,Tab:284000,aStall:0.60,CLa:4.8,gLim:9.0,pRate:1.80,rRate:3.40,yRate:0.60,cd0:0.021,AR:3.48,machMax:2.25}}
+ perf:{mass:25300,area:62.0,Td:172000,Tab:284000,aStall:0.68,CLa:4.8,gLim:9.0,pRate:2.20,rRate:4.00,yRate:0.82,cd0:0.021,AR:3.48,machMax:2.25}}
 ];
 
 /* ================= RENDERER ================= */
@@ -245,7 +245,6 @@ scene.add(fill);
   scene.add(new THREE.Mesh(skyGeo,skyMat));
 })();
 
-/* Sun disc */
 (function(){
   const c=document.createElement('canvas'); c.width=256;c.height=256;
   const g=c.getContext('2d');
@@ -326,6 +325,7 @@ function terrainSlope(x,z){
   geo.setAttribute('color',new THREE.BufferAttribute(col,3));
   geo.computeVertexNormals();
   const mat=new THREE.MeshStandardMaterial({vertexColors:true,roughness:0.95,metalness:0.0});
+  /* Grid baked in with anti-aliasing and altitude fade */
   mat.onBeforeCompile=(shader)=>{
     shader.vertexShader='varying vec3 vWPos;\n'+shader.vertexShader.replace(
       '#include <worldpos_vertex>',
@@ -333,7 +333,19 @@ function terrainSlope(x,z){
     );
     shader.fragmentShader='varying vec3 vWPos;\n'+shader.fragmentShader.replace(
       '#include <dithering_fragment>',
-      '#include <dithering_fragment>\nfloat gs=500.0;\nvec2 gW=vWPos.xz/gs;\nvec2 gf=abs(fract(gW)-0.5)*2.0;\nfloat lx=smoothstep(0.94,1.0,gf.x);\nfloat ly=smoothstep(0.94,1.0,gf.y);\nfloat line=max(lx,ly);\nfloat dCam=length(vWPos-cameraPosition);\nfloat fade=1.0-smoothstep(1500.0,6500.0,dCam);\ngl_FragColor.rgb+=vec3(0.0,1.0,0.93)*line*fade*0.55;'
+      '#include <dithering_fragment>\n'+
+      'float gs=1000.0;\n'+
+      'vec2 gW=vWPos.xz/gs;\n'+
+      'vec2 gf=abs(fract(gW)-0.5);\n'+
+      'vec2 fd=fwidth(gW);\n'+
+      'float lx=1.0-smoothstep(0.5-fd.x*2.0,0.5,gf.x);\n'+
+      'float ly=1.0-smoothstep(0.5-fd.y*2.0,0.5,gf.y);\n'+
+      'float line=max(lx,ly);\n'+
+      'float dCam=length(vWPos-cameraPosition);\n'+
+      'float distFade=1.0-smoothstep(600.0,2500.0,dCam);\n'+
+      'float altFade=1.0-smoothstep(200.0,700.0,cameraPosition.y);\n'+
+      'float fade=distFade*altFade;\n'+
+      'gl_FragColor.rgb+=vec3(0.0,1.0,0.93)*line*fade*0.75;'
     );
   };
   const mesh=new THREE.Mesh(geo,mat);
@@ -372,66 +384,101 @@ function terrainSlope(x,z){
   scene.add(mesh);
 })();
 
-/* ================= CITY ================= */
+/* ================= CITY (rebuilt — proper skyline) ================= */
 (function buildCity(){
   const cityCenter=new THREE.Vector3(0,0,16000);
-  const cityRadius=2200;
-  const towers=120;
+  const cityRadius=1800;
   const rng=(seed=>()=>{seed=(seed*9301+49297)%233280;return seed/233280;})(42);
-  const neonColors=[0x00ffee,0xff00aa,0xff2288,0x00aaff,0xaa44ff,0xff6600,0x44ff88,0xffee00];
-  const padGeo=new THREE.PlaneGeometry(cityRadius*2.5,cityRadius*2.5);
+  const neonColors=[0x00ffee,0xff00aa,0xff6600,0x00aaff,0xaa44ff,0xffee00,0xff0044,0x44ff88];
+
+  // Glowing base pad
+  const padGeo=new THREE.CircleGeometry(cityRadius*1.4,48);
   padGeo.rotateX(-Math.PI/2);
-  const pad=new THREE.Mesh(padGeo,new THREE.MeshBasicMaterial({color:0x0a0a14,transparent:true,opacity:0.65}));
-  pad.position.set(cityCenter.x,0.15,cityCenter.z);
+  const pad=new THREE.Mesh(padGeo,new THREE.MeshBasicMaterial({color:0x0a0a16,transparent:true,opacity:0.85}));
+  pad.position.set(cityCenter.x,0.20,cityCenter.z);
   scene.add(pad);
-  for(let i=0;i<towers;i++){
-    const a=rng()*Math.PI*2;
-    const r=rng()*cityRadius;
-    const x=cityCenter.x+Math.cos(a)*r;
-    const z=cityCenter.z+Math.sin(a)*r;
-    const h=60+rng()*520;
-    const w=20+rng()*50;
-    const d=20+rng()*50;
-    const body=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),new THREE.MeshStandardMaterial({color:0x1a1c28,metalness:0.8,roughness:0.4}));
-    body.position.set(x,h/2,z);
-    scene.add(body);
-    const trimColor=neonColors[(rng()*neonColors.length)|0];
-    const trimMat=new THREE.MeshBasicMaterial({color:trimColor});
-    for(const sx of [-1,1]){
-      for(const sz of [-1,1]){
-        const strip=new THREE.Mesh(new THREE.BoxGeometry(1.2,h,1.2),trimMat);
-        strip.position.set(x+sx*(w/2-0.6),h/2,z+sz*(d/2-0.6));
-        scene.add(strip);
+
+  const bodyMat=new THREE.MeshStandardMaterial({color:0x0c0d18,metalness:0.92,roughness:0.35});
+
+  function makeTower(x,z,baseW,baseD,height,primaryCol){
+    const g=new THREE.Group();
+    // 3-section setback tower for organic silhouette
+    const sections=height>500?3:(height>250?2:1);
+    let y=0, w=baseW, d=baseD;
+    for(let s=0;s<sections;s++){
+      const segH=height/sections*(s===0?1.15:1);
+      const body=new THREE.Mesh(new THREE.BoxGeometry(w,segH,d),bodyMat);
+      body.position.set(0,y+segH/2,0);
+      g.add(body);
+      // Neon edge strips (all 4 corners)
+      for(const sx of [-1,1])for(const sz of [-1,1]){
+        const strip=new THREE.Mesh(new THREE.BoxGeometry(1.6,segH,1.6),
+          new THREE.MeshBasicMaterial({color:primaryCol}));
+        strip.position.set(sx*(w/2-0.4),y+segH/2,sz*(d/2-0.4));
+        g.add(strip);
       }
+      // Horizontal band at top of section
+      const band=new THREE.Mesh(new THREE.BoxGeometry(w*1.06,3,d*1.06),
+        new THREE.MeshBasicMaterial({color:primaryCol}));
+      band.position.set(0,y+segH,0);
+      g.add(band);
+      y+=segH;
+      w*=0.68; d*=0.68;
     }
-    const ring=new THREE.Mesh(new THREE.BoxGeometry(w*1.05,2,d*1.05),new THREE.MeshBasicMaterial({color:trimColor,transparent:true,opacity:0.9}));
-    ring.position.set(x,h+1,z);
-    scene.add(ring);
-    if(h>400){
-      const spike=new THREE.Mesh(new THREE.CylinderGeometry(0.6,0.6,40,6),new THREE.MeshBasicMaterial({color:0xff2288}));
-      spike.position.set(x,h+22,z);
-      scene.add(spike);
-      const tipLight=new THREE.Mesh(new THREE.SphereGeometry(2.5,8,6),new THREE.MeshBasicMaterial({color:0xff2288}));
-      tipLight.position.set(x,h+42,z);
-      scene.add(tipLight);
+    // Crown light
+    const crown=new THREE.Mesh(new THREE.SphereGeometry(2.4,8,6),
+      new THREE.MeshBasicMaterial({color:primaryCol}));
+    crown.position.set(0,y+2,0);
+    g.add(crown);
+    // Antenna on tall towers
+    if(height>500){
+      const spike=new THREE.Mesh(new THREE.CylinderGeometry(0.5,0.5,60,6),
+        new THREE.MeshBasicMaterial({color:0xff2244}));
+      spike.position.set(0,y+32,0);
+      g.add(spike);
+      const beacon=new THREE.Mesh(new THREE.SphereGeometry(2,8,6),
+        new THREE.MeshBasicMaterial({color:0xff2244}));
+      beacon.position.set(0,y+62,0);
+      beacon.userData.beacon=true;
+      beacon.userData.phase=rng()*Math.PI*2;
+      g.add(beacon);
     }
+    g.position.set(x,0,z);
+    return g;
   }
-  for(let i=0;i<40;i++){
+
+  // Layout: mix of mega, tall, mid, small
+  const towerCount=72;
+  for(let i=0;i<towerCount;i++){
     const a=rng()*Math.PI*2;
-    const r=rng()*cityRadius;
+    const r=Math.pow(rng(),0.7)*cityRadius; // denser toward center
     const x=cityCenter.x+Math.cos(a)*r;
     const z=cityCenter.z+Math.sin(a)*r;
-    const w=40+rng()*140;
-    const bar=new THREE.Mesh(new THREE.BoxGeometry(w,1.5,3),new THREE.MeshBasicMaterial({color:neonColors[(rng()*neonColors.length)|0]}));
-    bar.position.set(x,2.2,z);
-    bar.rotation.y=a;
-    scene.add(bar);
+    // Height distribution: fewer tall, many short
+    const roll=rng();
+    let h,w,d;
+    if(roll<0.08){ h=900+rng()*500; w=60+rng()*40; d=60+rng()*40; } // mega
+    else if(roll<0.28){ h=450+rng()*400; w=42+rng()*30; d=42+rng()*30; } // tall
+    else if(roll<0.60){ h=180+rng()*250; w=30+rng()*25; d=30+rng()*25; } // mid
+    else { h=60+rng()*120; w=22+rng()*18; d=22+rng()*18; } // small
+    const col=neonColors[(rng()*neonColors.length)|0];
+    const tower=makeTower(x,z,w,d,h,col);
+    scene.add(tower);
   }
-  const domeGeo=new THREE.SphereGeometry(cityRadius*1.2,24,12,0,Math.PI*2,0,Math.PI*0.35);
-  const domeMat=new THREE.MeshBasicMaterial({color:0xff55cc,transparent:true,opacity:0.06,side:THREE.BackSide,blending:THREE.AdditiveBlending,depthWrite:false});
-  const dome=new THREE.Mesh(domeGeo,domeMat);
-  dome.position.set(cityCenter.x,0,cityCenter.z);
-  scene.add(dome);
+
+  // Skyline haze glow — soft magenta-pink dome
+  const hazeGeo=new THREE.SphereGeometry(cityRadius*1.6,24,12,0,Math.PI*2,0,Math.PI*0.4);
+  const hazeMat=new THREE.MeshBasicMaterial({color:0xff44cc,transparent:true,opacity:0.10,side:THREE.BackSide,blending:THREE.AdditiveBlending,depthWrite:false});
+  const haze=new THREE.Mesh(hazeGeo,hazeMat);
+  haze.position.set(cityCenter.x,0,cityCenter.z);
+  scene.add(haze);
+
+  // Big soft ground glow
+  const glowGeo=new THREE.SphereGeometry(cityRadius*1.2,20,10,0,Math.PI*2,0,Math.PI*0.5);
+  const glowMat=new THREE.MeshBasicMaterial({color:0xff66ff,transparent:true,opacity:0.06,side:THREE.BackSide,blending:THREE.AdditiveBlending,depthWrite:false});
+  const glow=new THREE.Mesh(glowGeo,glowMat);
+  glow.position.set(cityCenter.x,0,cityCenter.z);
+  scene.add(glow);
 })();
 
 /* ================= CLOUDS ================= */
@@ -452,8 +499,8 @@ function makeCloudTexture(size,puffs,opacity){
 }
 (function(){
   const tLow=makeCloudTexture(512,30,0.55);
-  for(let i=0;i<8;i++){
-    const m=new THREE.SpriteMaterial({map:tLow,transparent:true,opacity:0.45,depthWrite:false,fog:true,color:0xffffff});
+  for(let i=0;i<6;i++){
+    const m=new THREE.SpriteMaterial({map:tLow,transparent:true,opacity:0.40,depthWrite:false,fog:true,color:0xffffff});
     const sp=new THREE.Sprite(m);
     const a=Math.random()*Math.PI*2,r=1800+Math.random()*40000;
     sp.position.set(Math.cos(a)*r,700+Math.random()*500,Math.sin(a)*r);
@@ -462,8 +509,8 @@ function makeCloudTexture(size,puffs,opacity){
     scene.add(sp);
   }
   const tMid=makeCloudTexture(512,40,0.65);
-  for(let i=0;i<15;i++){
-    const m=new THREE.SpriteMaterial({map:tMid,transparent:true,opacity:0.55,depthWrite:false,fog:true,color:0xffffff});
+  for(let i=0;i<12;i++){
+    const m=new THREE.SpriteMaterial({map:tMid,transparent:true,opacity:0.50,depthWrite:false,fog:true,color:0xffffff});
     const sp=new THREE.Sprite(m);
     const a=Math.random()*Math.PI*2,r=3000+Math.random()*55000;
     sp.position.set(Math.cos(a)*r,2200+Math.random()*2200,Math.sin(a)*r);
@@ -604,7 +651,8 @@ function buildJet(cfg){
     const gc=document.createElement('canvas'); gc.width=128;gc.height=128;
     const gg=gc.getContext('2d');
     const grd=gg.createRadialGradient(64,64,2,64,64,62);
-    grd.addColorStop(0,'rgba(255,255,255,0.95)');
+    grd.addColorStop(0,'rg});
+ba(255,255,255,0.95)');
     grd.addColorStop(0.4,'rgba(255,200,120,0.5)');
     grd.addColorStop(1,'rgba(255,120,40,0)');
     gg.fillStyle=grd; gg.fillRect(0,0,128,128);
@@ -614,8 +662,7 @@ function buildJet(cfg){
     glow.scale.set(L*0.9,L*0.9,1);
     glow.position.set(px,0,L/2+L*0.20);
     root.add(glow);
-    nozzles.push({flame:flame,glow:glow});
-  }
+    nozzles.push({flame:flame,glow:glow  }
   if(eCount===2){
     for(const px of [1,-1]){
       const ig=new THREE.BoxGeometry(0.55*R,0.62*R,L*0.16);
@@ -685,6 +732,8 @@ const menu=document.getElementById('menu');
 const grid=document.getElementById('jetGrid');
 const loading=document.getElementById('loading');
 const toastEl=document.getElementById('toast');
+const thrKnobEl=document.getElementById('thrKnob');
+const thrFillEl=document.getElementById('thrFill');
 let toastTimer=null;
 function showToast(msg,dur){
   toastEl.textContent=msg;
@@ -729,7 +778,6 @@ function selectJet(i){
   }catch(e){ console.warn('selectJet',e); }
 }
 
-/* deferred initial accent so any DOM hiccup can't block boot */
 setTimeout(function(){try{selectJet(0);}catch(e){console.warn('init select',e);}},60);
 
 /* ================= AUDIO ================= */
@@ -1062,6 +1110,15 @@ function updateCamera(dt){
   key.target.position.copy(p.pos);
   key.position.copy(p.pos).addScaledVector(sunDir,900);
   key.target.updateMatrixWorld();
+
+  /* Update throttle UI (knob position + fill) */
+  if(thrKnobEl){
+    thrKnobEl.style.bottom=Math.round(player.throttle*100)+'%';
+    thrKnobEl.style.transform='translateY(50%)';
+  }
+  if(thrFillEl){
+    thrFillEl.style.height=Math.round(player.throttle*100)+'%';
+  }
 }
 
 /* ================= HUD ================= */
@@ -1175,17 +1232,14 @@ function drawHUD(){
   ctx.fillText('MACH',bx,by);
   ctx.font='800 22px -apple-system,Helvetica,Arial';
   ctx.fillText(p.mach.toFixed(2),bx,by+24);
-
   ctx.font='700 12px -apple-system,Helvetica,Arial';
   ctx.fillText('G',bx,by+50);
   ctx.font='800 22px -apple-system,Helvetica,Arial';
   ctx.fillText(p.g.toFixed(1),bx,by+74);
-
   ctx.font='700 12px -apple-system,Helvetica,Arial';
   ctx.fillText('AOA',bx+86,by+50);
   ctx.font='800 22px -apple-system,Helvetica,Arial';
   ctx.fillText(p.aoaDeg.toFixed(0)+'°',bx+86,by+74);
-
   ctx.font='700 12px -apple-system,Helvetica,Arial';
   ctx.fillText('V/S',bx,by+102);
   ctx.font='800 18px -apple-system,Helvetica,Arial';
@@ -1198,14 +1252,12 @@ function drawHUD(){
   ctx.fillText('THR',rx,by);
   ctx.font='800 22px -apple-system,Helvetica,Arial';
   ctx.fillText(Math.round(p.throttle*100)+'%',rx,by+24);
-
   ctx.font='700 12px -apple-system,Helvetica,Arial';
   ctx.fillText('FUEL',rx,by+50);
   ctx.font='800 22px -apple-system,Helvetica,Arial';
   ctx.fillStyle=p.fuel<0.15?MAGENTA:accent;
   ctx.fillText(Math.round(p.fuel*100)+'%',rx,by+74);
   ctx.fillStyle=accent;
-
   ctx.font='700 12px -apple-system,Helvetica,Arial';
   ctx.fillText('HDG',rx,by+102);
   ctx.font='800 18px -apple-system,Helvetica,Arial';
