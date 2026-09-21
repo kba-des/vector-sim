@@ -547,7 +547,7 @@ const aircraft={
 const ctrlInput={pitch:0,roll:0,yaw:0,brake:false};
 
 function resetToRunway(){
-  aircraft.pos.set(0,RUNWAY_ELEV+2.05,RW_START_Z-60);
+  aircraft.pos.set(0,RUNWAY_ELEV+3.5,RW_START_Z-60);
   aircraft.vel.set(0,0,0);
   aircraft.quat.setFromEuler(new THREE.Euler(0,Math.PI,0,'YXZ')); // Heading 360 North
   aircraft.rates.set(0,0,0);
@@ -1270,7 +1270,7 @@ function mainLoop(now){
   requestAnimationFrame(mainLoop);
   let dt = (now - lastFrame) / 1000;
   lastFrame = now;
-  if (dt > 0.1) dt = 0.1;
+  if (dt > 0.033) dt = 0.033;
   if (dt <= 0) dt = 0.016;
   
   if (aircraft.model && !aircraft.crashed) {
