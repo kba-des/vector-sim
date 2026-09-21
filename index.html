@@ -91,7 +91,8 @@
   </div>
 </div>
 <div id="loading">INITIALIZING…</div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<div id="errlog" style="position:fixed;top:60px;left:8px;right:8px;z-index:999;background:rgba(255,0,0,0.85);color:#fff;font:11px monospace;padding:6px;white-space:pre-wrap;display:none;pointer-events:none;max-height:40vh;overflow:auto;"></div>
+<script>window.addEventListener('error',function(e){var d=document.getElementById('errlog');if(d){d.style.display='block';d.textContent+='ERR: '+e.message+' @ line '+e.lineno+':'+e.colno+'\n';}});</script><script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
 (function(){
 'use strict';
