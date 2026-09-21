@@ -104,25 +104,26 @@ const smoothstep=(a,b,x)=>{const t=clamp((x-a)/(b-a),0,1);return t*t*(3-2*t);};
 const R2D=180/Math.PI;
 
 /* ================= AIRCRAFT ================= */
+/* Each jet now has a distinct neon accent color (trim) */
 const JETS=[
 {id:'f22',name:'F-22A Raptor',gen:'5',flag:'USAF',color:0x1a2a3a,dark:0x0a1828,trim:0x00ffee,
- L:18.9,R:1.00,exh:0xff00aa,
+ L:18.9,R:1.00,exh:0x00ffee,
  wing:{span:6.85,root:6.0,tip:1.55,sweep:4.3,thick:0.20,f:0.46,y:-0.18},
  htail:{span:3.05,root:2.9,tip:0.95,sweep:1.9,thick:0.15,f:0.86,y:0.12},
  vtail:{count:2,h:3.35,root:3.8,tip:1.15,sweep:2.6,thick:0.13,f:0.74,x:1.02,cant:0.44},
  canopy:{f:0.30,len:3.6,r:0.78,tint:0x00384a},
  engines:2,eX:1.02,
  perf:{mass:26000,area:78.0,Td:232000,Tab:312000,aStall:0.52,CLa:4.6,gLim:9.0,pRate:1.70,rRate:3.40,yRate:0.58,cd0:0.019,AR:2.36,machMax:2.25}},
-{id:'f35',name:'F-35A Lightning II',gen:'5',flag:'USAF',color:0x1a1a30,dark:0x08080f,trim:0xff00aa,
- L:15.7,R:1.05,exh:0xff55ff,
+{id:'f35',name:'F-35A Lightning II',gen:'5',flag:'USAF',color:0x1a1a30,dark:0x08080f,trim:0x00aaff,
+ L:15.7,R:1.05,exh:0x00aaff,
  wing:{span:5.35,root:4.9,tip:1.30,sweep:3.5,thick:0.19,f:0.47,y:-0.14},
  htail:{span:3.35,root:2.7,tip:0.95,sweep:1.8,thick:0.14,f:0.85,y:0.14},
  vtail:{count:2,h:2.85,root:3.4,tip:1.05,sweep:2.3,thick:0.12,f:0.72,x:0.95,cant:0.42},
- canopy:{f:0.29,len:3.2,r:0.80,tint:0x40004a},
+ canopy:{f:0.29,len:3.2,r:0.80,tint:0x00304a},
  engines:1,eX:0,
  perf:{mass:21000,area:42.7,Td:128000,Tab:191000,aStall:0.44,CLa:4.4,gLim:9.0,pRate:1.15,rRate:2.65,yRate:0.42,cd0:0.022,AR:2.68,machMax:1.60}},
-{id:'su57',name:'Su-57 Felon',gen:'5',flag:'RUAF',color:0x2a1a3a,dark:0x120810,trim:0xff2200,
- L:20.1,R:1.15,exh:0xffaa00,
+{id:'su57',name:'Su-57 Felon',gen:'5',flag:'RUAF',color:0x2a1a3a,dark:0x120810,trim:0xff6600,
+ L:20.1,R:1.15,exh:0xff6600,
  wing:{span:6.95,root:6.4,tip:1.70,sweep:4.6,thick:0.19,f:0.44,y:-0.16},
  htail:{span:3.40,root:3.0,tip:1.05,sweep:2.1,thick:0.14,f:0.84,y:0.16},
  vtail:{count:2,h:3.20,root:4.0,tip:1.20,sweep:2.8,thick:0.12,f:0.72,x:1.15,cant:0.30},
@@ -130,55 +131,55 @@ const JETS=[
  engines:2,eX:1.05,
  perf:{mass:25500,area:78.8,Td:176000,Tab:284000,aStall:0.50,CLa:4.7,gLim:9.0,pRate:1.62,rRate:3.20,yRate:0.58,cd0:0.020,AR:2.45,machMax:2.00}},
 {id:'j20',name:'J-20 Mighty Dragon',gen:'5',flag:'PLAAF',color:0x1a2030,dark:0x080c14,trim:0xff0044,
- L:20.4,R:1.10,exh:0xff6600,
+ L:20.4,R:1.10,exh:0xff0044,
  wing:{span:6.80,root:7.6,tip:1.35,sweep:5.2,thick:0.18,f:0.42,y:-0.10},htail:null,
  vtail:{count:2,h:3.10,root:4.2,tip:1.10,sweep:2.9,thick:0.12,f:0.70,x:1.30,cant:0.36},
  canard:{span:2.35,root:2.9,tip:0.95,sweep:1.9,thick:0.13,f:0.28,y:0.35},
  canopy:{f:0.24,len:3.6,r:0.80,tint:0x30003a},
  engines:2,eX:0.95,
  perf:{mass:25000,area:73.0,Td:180000,Tab:294000,aStall:0.48,CLa:4.5,gLim:9.0,pRate:1.35,rRate:2.85,yRate:0.48,cd0:0.021,AR:2.53,machMax:2.00}},
-{id:'fa18e',name:'F/A-18E Super Hornet',gen:'4.5',flag:'USN',color:0x1c2a30,dark:0x0a141a,trim:0x00ccff,
- L:18.3,R:1.02,exh:0x00ffff,
+{id:'fa18e',name:'F/A-18E Super Hornet',gen:'4.5',flag:'USN',color:0x1c2a30,dark:0x0a141a,trim:0x44ff88,
+ L:18.3,R:1.02,exh:0x44ff88,
  wing:{span:6.10,root:5.4,tip:1.55,sweep:3.6,thick:0.20,f:0.44,y:-0.16},
  htail:{span:3.35,root:3.0,tip:1.15,sweep:2.0,thick:0.15,f:0.87,y:0.10},
  vtail:{count:2,h:3.10,root:3.9,tip:1.35,sweep:2.7,thick:0.13,f:0.73,x:1.05,cant:0.35},
  canopy:{f:0.28,len:3.5,r:0.78,tint:0x00303a},
  engines:2,eX:0.90,
  perf:{mass:21000,area:46.5,Td:124000,Tab:196000,aStall:0.50,CLa:4.5,gLim:7.5,pRate:1.25,rRate:3.00,yRate:0.52,cd0:0.023,AR:3.20,machMax:1.60}},
-{id:'f15ex',name:'F-15EX Eagle II',gen:'4.5',flag:'USAF',color:0x2a2030,dark:0x100814,trim:0x44ff88,
- L:19.4,R:1.12,exh:0x00ff88,
+{id:'f15ex',name:'F-15EX Eagle II',gen:'4.5',flag:'USAF',color:0x2a2030,dark:0x100814,trim:0xffee00,
+ L:19.4,R:1.12,exh:0xffee00,
  wing:{span:6.55,root:5.6,tip:1.45,sweep:3.4,thick:0.21,f:0.42,y:-0.05},
  htail:{span:3.45,root:3.4,tip:1.25,sweep:2.2,thick:0.16,f:0.88,y:0.10},
  vtail:{count:2,h:3.60,root:4.3,tip:1.45,sweep:2.8,thick:0.14,f:0.76,x:1.05,cant:0.10},
- canopy:{f:0.24,len:3.9,r:0.80,tint:0x003820},
+ canopy:{f:0.24,len:3.9,r:0.80,tint:0x303000},
  engines:2,eX:0.92,
  perf:{mass:21000,area:56.5,Td:158000,Tab:260000,aStall:0.40,CLa:4.6,gLim:9.0,pRate:1.32,rRate:3.00,yRate:0.50,cd0:0.020,AR:3.04,machMax:2.50}},
-{id:'typhoon',name:'Eurofighter Typhoon',gen:'4.5',flag:'EU',color:0x1a2530,dark:0x080e18,trim:0xffee00,
- L:15.96,R:0.95,exh:0xffee00,
+{id:'typhoon',name:'Eurofighter Typhoon',gen:'4.5',flag:'EU',color:0x1a2530,dark:0x080e18,trim:0xff2288,
+ L:15.96,R:0.95,exh:0xff2288,
  wing:{span:5.55,root:7.0,tip:0.95,sweep:4.4,thick:0.17,f:0.38,y:-0.05},htail:null,
  vtail:{count:1,h:3.30,root:4.6,tip:1.30,sweep:3.0,thick:0.14,f:0.72,x:0,cant:0},
  canard:{span:2.05,root:3.2,tip:0.80,sweep:2.0,thick:0.13,f:0.26,y:0.42},
- canopy:{f:0.26,len:3.3,r:0.74,tint:0x303000},
+ canopy:{f:0.26,len:3.3,r:0.74,tint:0x400030},
  engines:2,eX:0.72,
  perf:{mass:16500,area:51.2,Td:120000,Tab:180000,aStall:0.48,CLa:4.6,gLim:9.0,pRate:1.60,rRate:3.60,yRate:0.60,cd0:0.019,AR:2.41,machMax:2.00}},
-{id:'rafale',name:'Dassault Rafale C',gen:'4.5',flag:'FR',color:0x1a2030,dark:0x080c18,trim:0x44aaff,
- L:15.27,R:0.92,exh:0x44aaff,
+{id:'rafale',name:'Dassault Rafale C',gen:'4.5',flag:'FR',color:0x1a2030,dark:0x080c18,trim:0xaa44ff,
+ L:15.27,R:0.92,exh:0xaa44ff,
  wing:{span:5.20,root:6.4,tip:1.00,sweep:4.0,thick:0.17,f:0.40,y:-0.05},htail:null,
  vtail:{count:1,h:3.10,root:4.2,tip:1.25,sweep:2.8,thick:0.13,f:0.74,x:0,cant:0},
  canard:{span:1.95,root:2.6,tip:0.75,sweep:1.7,thick:0.12,f:0.24,y:0.38},
- canopy:{f:0.27,len:3.1,r:0.72,tint:0x10304a},
+ canopy:{f:0.27,len:3.1,r:0.72,tint:0x2a0050},
  engines:2,eX:0.66,
  perf:{mass:15500,area:45.7,Td:100000,Tab:150000,aStall:0.50,CLa:4.6,gLim:9.0,pRate:1.52,rRate:3.40,yRate:0.56,cd0:0.020,AR:2.37,machMax:1.80}},
-{id:'gripen',name:'Saab Gripen E',gen:'4.5',flag:'SE',color:0x1c2430,dark:0x0a0e18,trim:0x00ffaa,
- L:15.2,R:0.86,exh:0x00ffaa,
+{id:'gripen',name:'Saab Gripen E',gen:'4.5',flag:'SE',color:0x1c2430,dark:0x0a0e18,trim:0x00ff88,
+ L:15.2,R:0.86,exh:0x00ff88,
  wing:{span:4.20,root:5.6,tip:0.90,sweep:3.4,thick:0.16,f:0.40,y:-0.02},htail:null,
  vtail:{count:1,h:2.90,root:3.9,tip:1.10,sweep:2.5,thick:0.13,f:0.74,x:0,cant:0},
  canard:{span:1.75,root:2.3,tip:0.70,sweep:1.5,thick:0.11,f:0.25,y:0.34},
  canopy:{f:0.28,len:2.9,r:0.70,tint:0x003830},
  engines:1,eX:0,
  perf:{mass:12500,area:31.0,Td:62000,Tab:98000,aStall:0.48,CLa:4.5,gLim:9.0,pRate:1.60,rRate:3.60,yRate:0.62,cd0:0.020,AR:2.28,machMax:2.00}},
-{id:'su35',name:'Su-35S Flanker-E',gen:'4.5',flag:'RUAF',color:0x2a1c30,dark:0x100818,trim:0xff4400,
- L:21.9,R:1.18,exh:0xff4400,
+{id:'su35',name:'Su-35S Flanker-E',gen:'4.5',flag:'RUAF',color:0x2a1c30,dark:0x100818,trim:0xff2200,
+ L:21.9,R:1.18,exh:0xff2200,
  wing:{span:7.35,root:6.6,tip:1.60,sweep:4.0,thick:0.21,f:0.42,y:-0.10},
  htail:{span:3.60,root:3.2,tip:1.10,sweep:2.1,thick:0.15,f:0.85,y:0.14},
  vtail:{count:2,h:3.60,root:4.4,tip:1.35,sweep:2.9,thick:0.14,f:0.74,x:1.25,cant:0.12},
@@ -194,22 +195,20 @@ const ctx=hudCv.getContext('2d');
 const renderer=new THREE.WebGLRenderer({canvas,antialias:true,powerPreference:'high-performance'});
 renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,1.75));
 renderer.toneMapping=THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure=1.35;
+renderer.toneMappingExposure=1.25;
 renderer.outputEncoding=THREE.sRGBEncoding;
 
 const scene=new THREE.Scene();
-// Neon purple fog
-scene.fog=new THREE.FogExp2(0x1a0033,0.000045);
+scene.fog=new THREE.FogExp2(0x1a0033,0.000040);
 
 const camera=new THREE.PerspectiveCamera(70,1,0.5,400000);
-const sunDir=new THREE.Vector3(-0.30,0.22,-0.92).normalize(); // low sun toward horizon (synthwave)
+const sunDir=new THREE.Vector3(-0.30,0.22,-0.92).normalize();
 
-// Ambient + hemisphere with neon tint
-scene.add(new THREE.HemisphereLight(0x6600cc,0x003340,0.65));
-const key=new THREE.DirectionalLight(0xff00aa,1.4);
+scene.add(new THREE.HemisphereLight(0x6600cc,0x003340,0.60));
+const key=new THREE.DirectionalLight(0xff00aa,1.3);
 key.position.copy(sunDir).multiplyScalar(1000);
 scene.add(key);
-const fill=new THREE.DirectionalLight(0x00ffee,0.85);
+const fill=new THREE.DirectionalLight(0x00ffee,0.80);
 fill.position.set(0.6,0.4,-0.6).multiplyScalar(1000);
 scene.add(fill);
 
@@ -235,20 +234,15 @@ scene.add(fill);
         else if(h<0.10) c=mix(bot,hor,smoothstep(0.0,0.10,h));
         else if(h<0.30) c=mix(hor,mid,smoothstep(0.10,0.30,h));
         else c=mix(mid,top,smoothstep(0.30,0.95,h));
-        // Sun with horizontal stripes (synthwave)
         float sd=dot(normalize(vW),normalize(sunDir));
         float sunMask=pow(max(sd,0.0),220.0)*12.0;
-        // stripe cutouts across the sun disc
         float stripeY=vW.y*70.0;
         float stripes=step(0.55,fract(stripeY));
         float sunCore=pow(max(sd,0.0),180.0)*20.0;
         c+=vec3(1.0,0.45,0.85)*sunCore*(1.0-stripes*0.85);
-        // Big soft glow
         c+=vec3(1.0,0.2,0.7)*pow(max(sd,0.0),8.0)*0.55;
-        // horizon glow near sun
         float hz=1.0-abs(h);
         c+=vec3(1.0,0.4,0.9)*pow(hz,14.0)*pow(max(sd,0.0),1.2)*0.9;
-        // subtle scanlines for CRT feel
         float scan=0.96+0.04*sin(vW.y*420.0);
         c*=scan;
         gl_FragColor=vec4(c,1.0);
@@ -257,19 +251,17 @@ scene.add(fill);
   scene.add(new THREE.Mesh(skyGeo,skyMat));
 })();
 
-/* Sun sprite — big striped disc */
+/* Sun sprite */
 (function(){
   const c=document.createElement('canvas'); c.width=512;c.height=512;
   const g=c.getContext('2d');
   const cx=256,cy=256;
-  // Radial magenta glow
   const grd=g.createRadialGradient(cx,cy,4,cx,cy,250);
   grd.addColorStop(0,'rgba(255,120,220,0.95)');
   grd.addColorStop(0.35,'rgba(255,0,170,0.55)');
   grd.addColorStop(0.7,'rgba(180,0,140,0.18)');
   grd.addColorStop(1,'rgba(120,0,90,0)');
   g.fillStyle=grd; g.beginPath(); g.arc(cx,cy,250,0,Math.PI*2); g.fill();
-  // Sun disc with stripes
   g.save();
   g.beginPath(); g.arc(cx,cy,150,0,Math.PI*2); g.clip();
   const disc=g.createRadialGradient(cx,cy,10,cx,cy,150);
@@ -278,7 +270,6 @@ scene.add(fill);
   disc.addColorStop(0.85,'rgba(255,80,140,0.9)');
   disc.addColorStop(1,'rgba(200,0,120,0.85)');
   g.fillStyle=disc; g.fillRect(0,0,512,512);
-  // Horizontal cutouts
   g.globalCompositeOperation='destination-out';
   for(let y=0;y<512;y+=18){
     const h=6+Math.random()*4;
@@ -303,7 +294,7 @@ scene.add(fill);
   for(let i=0;i<N;i++){
     const r=120000+Math.random()*40000;
     const th=Math.random()*Math.PI*2;
-    const ph=Math.acos(0.15+Math.random()*0.85); // upper hemisphere only
+    const ph=Math.acos(0.15+Math.random()*0.85);
     pos[i*3]=r*Math.sin(ph)*Math.cos(th);
     pos[i*3+1]=r*Math.cos(ph);
     pos[i*3+2]=r*Math.sin(ph)*Math.sin(th);
@@ -318,7 +309,7 @@ scene.add(fill);
   scene.add(new THREE.Points(geo,mat));
 })();
 
-/* ================= TERRAIN (dark, neon-tinted) ================= */
+/* ================= TERRAIN ================= */
 function hash2(x,y){const n=Math.sin(x*127.1+y*311.7)*43758.5453123;return n-Math.floor(n);}
 function vnoise(x,y){
   const xi=Math.floor(x),yi=Math.floor(y),xf=x-xi,yf=y-yi;
@@ -361,56 +352,53 @@ function terrainH(x,z){
     if(t<0.15) tmp.copy(cLow).lerp(cMid,t/0.15);
     else if(t<0.55) tmp.copy(cMid).lerp(cHigh,(t-0.15)/0.40);
     else tmp.copy(cHigh).lerp(cPeak,(t-0.55)/0.45);
-    // faint vertical glow on peaks
     const peakGlow=Math.pow(t,3.0)*0.35;
     tmp.r+=peakGlow*0.6; tmp.g+=peakGlow*0.1; tmp.b+=peakGlow*0.9;
-    // noise dither
     const n=vnoise(x*0.001,z*0.001)*0.05-0.025;
     tmp.offsetHSL(0.0,0.0,n);
     col[i*3]=tmp.r;col[i*3+1]=tmp.g;col[i*3+2]=tmp.b;
   }
   geo.setAttribute('color',new THREE.BufferAttribute(col,3));
   geo.computeVertexNormals();
-  const mat=new THREE.MeshStandardMaterial({vertexColors:true,roughness:0.85,metalness:0.25,emissive:0x1a0040,emissiveIntensity:0.4});
+  const mat=new THREE.MeshStandardMaterial({vertexColors:true,roughness:0.85,metalness:0.25,emissive:0x1a0040,emissiveIntensity:0.4,polygonOffset:true,polygonOffsetFactor:1,polygonOffsetUnits:1});
   scene.add(new THREE.Mesh(geo,mat));
 })();
 
-/* ================= NEON GRID OVERLAY ================= */
+/* ================= NEON GRID OVERLAY (glitch fix) ================= */
 (function(){
-  const N=140;      // lines per side
-  const EXT=34000;  // half-extent
-  const y=0.6;
+  const N=140;
+  const EXT=34000;
+  const y=2.5; // raised above terrain to prevent z-fighting
   const positions=[];
   for(let i=-N;i<=N;i++){
     const t=i/N;
-    positions.push(t*EXT,y,-EXT, t*EXT,y,EXT);      // z-aligned lines
-    positions.push(-EXT,y,t*EXT, EXT,y,t*EXT);      // x-aligned lines
+    positions.push(t*EXT,y,-EXT, t*EXT,y,EXT);
+    positions.push(-EXT,y,t*EXT, EXT,y,t*EXT);
   }
   const geo=new THREE.BufferGeometry();
   geo.setAttribute('position',new THREE.Float32BufferAttribute(positions,3));
-  const mat=new THREE.LineBasicMaterial({color:0x00ffee,transparent:true,opacity:0.55,fog:true,blending:THREE.AdditiveBlending,depthWrite:false});
-  scene.add(new THREE.LineSegments(geo,mat));
+  const mat=new THREE.LineBasicMaterial({color:0x00ffee,transparent:true,opacity:0.45,fog:true,blending:THREE.AdditiveBlending,depthWrite:false,depthTest:true});
+  const grid=new THREE.LineSegments(geo,mat);
+  grid.renderOrder=2;
+  scene.add(grid);
 })();
 
-/* ================= OCEAN (dark reflective neon) ================= */
+/* ================= OCEAN ================= */
 (function(){
   const g=new THREE.PlaneGeometry(360000,360000,1,1);
   g.rotateX(-Math.PI/2);
   const m=new THREE.MeshStandardMaterial({color:0x0a0028,roughness:0.15,metalness:0.9,transparent:true,opacity:0.94,emissive:0x100030,emissiveIntensity:0.5});
-  const mesh=new THREE.Mesh(g,m); mesh.position.y=0.15; scene.add(mesh);
+  const mesh=new THREE.Mesh(g,m); mesh.position.y=0.10; scene.add(mesh);
 })();
 
-/* ================= RUNWAY (neon pads) ================= */
+/* ================= RUNWAY ================= */
 (function(){
   const c=document.createElement('canvas'); c.width=256; c.height=2048;
   const g=c.getContext('2d');
   g.fillStyle='#0a0020'; g.fillRect(0,0,256,2048);
-  // neon edge glow
   g.fillStyle='#00ffee'; g.fillRect(8,0,6,2048); g.fillRect(242,0,6,2048);
-  // dash centerline
   g.fillStyle='#ff00aa';
   for(let y=80;y<2048;y+=140) g.fillRect(122,y,12,80);
-  // threshold bars
   g.fillStyle='#ff00aa';
   for(let i=0;i<8;i++) g.fillRect(50+i*22,60,14,180);
   for(let i=0;i<8;i++) g.fillRect(50+i*22,1810,14,180);
@@ -418,11 +406,91 @@ function terrainH(x,z){
   tex.wrapS=tex.wrapT=THREE.ClampToEdgeWrapping;
   const geo=new THREE.PlaneGeometry(56,3600); geo.rotateX(-Math.PI/2);
   const mesh=new THREE.Mesh(geo,new THREE.MeshStandardMaterial({map:tex,roughness:0.7,metalness:0.3,emissive:0x220044,emissiveIntensity:0.6}));
-  mesh.position.set(0,FLAT_H+0.10,-1500);
+  mesh.position.set(0,FLAT_H+0.12,-1500);
   scene.add(mesh);
 })();
 
-/* ================= CLOUDS (neon-tinted) ================= */
+/* ================= CITY ON THE HORIZON ================= */
+(function buildCity(){
+  // Place a big neon city ~14km away on the -Z axis (ahead of the runway)
+  const cityCenter=new THREE.Vector3(0,0,-14000);
+  const cityRadius=2200;
+  const towers=120;
+  const rng=(seed=>()=>{seed=(seed*9301+49297)%233280;return seed/233280;})(42);
+  const neonColors=[0x00ffee,0xff00aa,0xff2288,0x00aaff,0xaa44ff,0xff6600,0x44ff88,0xffee00];
+
+  // Base pad (glowing)
+  const padGeo=new THREE.PlaneGeometry(cityRadius*2.5,cityRadius*2.5);
+  padGeo.rotateX(-Math.PI/2);
+  const pad=new THREE.Mesh(padGeo,new THREE.MeshBasicMaterial({color:0x0a0020,transparent:true,opacity:0.6}));
+  pad.position.set(cityCenter.x,0.15,cityCenter.z);
+  scene.add(pad);
+
+  // Towers
+  for(let i=0;i<towers;i++){
+    const a=rng()*Math.PI*2;
+    const r=rng()*cityRadius;
+    const x=cityCenter.x+Math.cos(a)*r;
+    const z=cityCenter.z+Math.sin(a)*r;
+    const h=60+rng()*520;
+    const w=20+rng()*50;
+    const d=20+rng()*50;
+
+    // Dark building body
+    const bodyMat=new THREE.MeshStandardMaterial({color:0x08001a,metalness:0.85,roughness:0.35,emissive:0x0a0020,emissiveIntensity:0.3});
+    const body=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),bodyMat);
+    body.position.set(x,h/2,z);
+    scene.add(body);
+
+    // Neon trim — vertical strips on each corner
+    const trimColor=neonColors[(rng()*neonColors.length)|0];
+    const trimMat=new THREE.MeshBasicMaterial({color:trimColor});
+    for(const sx of [-1,1]){
+      for(const sz of [-1,1]){
+        const strip=new THREE.Mesh(new THREE.BoxGeometry(1.2,h,w>d?1.2:1.2),trimMat);
+        strip.position.set(x+sx*(w/2-0.6),h/2,z+sz*(d/2-0.6));
+        scene.add(strip);
+      }
+    }
+    // Top glow ring
+    const ringMat=new THREE.MeshBasicMaterial({color:trimColor,transparent:true,opacity:0.9});
+    const ring=new THREE.Mesh(new THREE.BoxGeometry(w*1.05,2,d*1.05),ringMat);
+    ring.position.set(x,h+1,z);
+    scene.add(ring);
+
+    // Antenna spike on tall towers
+    if(h>400){
+      const spike=new THREE.Mesh(new THREE.CylinderGeometry(0.6,0.6,40,6),new THREE.MeshBasicMaterial({color:0xff2288}));
+      spike.position.set(x,h+22,z);
+      scene.add(spike);
+      const tipLight=new THREE.Mesh(new THREE.SphereGeometry(2.5,8,6),new THREE.MeshBasicMaterial({color:0xff2288}));
+      tipLight.position.set(x,h+42,z);
+      scene.add(tipLight);
+    }
+  }
+
+  // Ground light spills — horizontal neon bars near base
+  for(let i=0;i<40;i++){
+    const a=rng()*Math.PI*2;
+    const r=rng()*cityRadius;
+    const x=cityCenter.x+Math.cos(a)*r;
+    const z=cityCenter.z+Math.sin(a)*r;
+    const w=40+rng()*140;
+    const bar=new THREE.Mesh(new THREE.BoxGeometry(w,1.5,3),new THREE.MeshBasicMaterial({color:neonColors[(rng()*neonColors.length)|0]}));
+    bar.position.set(x,2.2,z);
+    bar.rotation.y=a;
+    scene.add(bar);
+  }
+
+  // Big glowing dome over the city (haze)
+  const domeGeo=new THREE.SphereGeometry(cityRadius*1.2,24,12,0,Math.PI*2,0,Math.PI*0.35);
+  const domeMat=new THREE.MeshBasicMaterial({color:0xff00aa,transparent:true,opacity:0.10,side:THREE.BackSide,blending:THREE.AdditiveBlending,depthWrite:false});
+  const dome=new THREE.Mesh(domeGeo,domeMat);
+  dome.position.set(cityCenter.x,0,cityCenter.z);
+  scene.add(dome);
+})();
+
+/* ================= CLOUDS ================= */
 function makeCloudTexture(size,puffs,opacity,r,g,b){
   const c=document.createElement('canvas'); c.width=size;c.height=size;
   const ctx=c.getContext('2d');
@@ -461,7 +529,7 @@ function makeCloudTexture(size,puffs,opacity,r,g,b){
   }
 })();
 
-/* ================= JET BUILDER (neon-trim) ================= */
+/* ================= JET BUILDER ================= */
 const DEFAULT_PROFILE=[[0.000,0.015],[0.035,0.30],[0.090,0.60],[0.170,0.84],[0.275,0.965],[0.400,1.000],[0.540,0.985],[0.670,0.935],[0.790,0.865],[0.900,0.780],[1.000,0.690]];
 function wingGeo(rootChord,tipChord,semiSpan,sweep,thick,side){
   const s=new THREE.Shape();
@@ -495,7 +563,6 @@ function buildJet(cfg){
   fg.rotateX(Math.PI/2); fg.scale(1,0.86,1);
   const fus=new THREE.Mesh(fg,bodyMat);
   root.add(fus);
-  // glow strip along fuselage top
   const strip=new THREE.Mesh(new THREE.BoxGeometry(0.08,0.04,L*0.75),trimMat);
   strip.position.set(0,R*0.90,zN+L*0.50);
   root.add(strip);
@@ -524,12 +591,10 @@ function buildJet(cfg){
       const m=new THREE.Mesh(g,wingMat);
       m.position.set(0,w.y||0,zN+w.f*L);
       root.add(m);
-      // Wing leading edge glow
       const le=new THREE.Mesh(new THREE.BoxGeometry(0.12,0.05,w.span*1.02),trimMat);
       le.position.set(side*w.span*0.5,(w.y||0)+w.thick*0.55,zN+w.f*L-w.root*0.10);
       le.rotation.y=-side*Math.atan2(w.sweep,(w.span));
       root.add(le);
-      // Wingtip glow sphere
       const tg=new THREE.Mesh(new THREE.SphereGeometry(0.18,8,6),trimGlow);
       tg.position.set(side*w.span*1.02,(w.y||0)+0.08,zN+w.f*L+w.sweep+w.tip*0.55);
       root.add(tg);
@@ -566,7 +631,6 @@ function buildJet(cfg){
       m.position.set(px,0,zN+v.f*L);
       m.rotation.z=(px>0?-1:1)*v.cant;
       root.add(m);
-      // neon leading edge on fin
       const fe=new THREE.Mesh(new THREE.BoxGeometry(0.06,0.06,v.h),trimMat);
       fe.position.set(px, v.h*0.5, zN+v.f*L + v.sweep*0.5);
       fe.rotation.z=(px>0?-1:1)*v.cant;
@@ -584,7 +648,6 @@ function buildJet(cfg){
     const eg=new THREE.CylinderGeometry(0.36*R,0.44*R,L*0.15,24);
     eg.rotateX(Math.PI/2); eg.translate(px,0,L/2-L*0.06);
     root.add(new THREE.Mesh(eg,metalMat));
-    // NOZZLE GLOW RING
     const ring=new THREE.Mesh(new THREE.TorusGeometry(0.42*R,0.05,8,20),new THREE.MeshBasicMaterial({color:cfg.exh}));
     ring.rotation.y=Math.PI/2;
     ring.position.set(px,0,L/2+0.02);
@@ -593,14 +656,12 @@ function buildJet(cfg){
     ringGlow.rotation.y=Math.PI/2;
     ringGlow.position.copy(ring.position);
     root.add(ringGlow);
-    // Afterburner flame cone
     const fg2=new THREE.ConeGeometry(0.40*R,L*0.55,20,1,true);
     fg2.rotateX(-Math.PI/2);
     const fm=new THREE.MeshBasicMaterial({color:cfg.exh,transparent:true,opacity:0.0,blending:THREE.AdditiveBlending,depthWrite:false,side:THREE.DoubleSide});
     const flame=new THREE.Mesh(fg2,fm);
     flame.position.set(px,0,L/2+L*0.28);
     root.add(flame);
-    // Glow sprite on the engine
     const gc=document.createElement('canvas'); gc.width=128;gc.height=128;
     const gg=gc.getContext('2d');
     const grd=gg.createRadialGradient(64,64,2,64,64,62);
@@ -647,19 +708,16 @@ const player={
 };
 const input={pitch:0,roll:0,yaw:0,brake:false};
 
-/* Trail system — neon contrails */
 const trails=[];
 function spawnTrail(pos,color){
   if(trails.length>60) return;
-  const sprite=new THREE.Sprite(new THREE.SpriteMaterial({color:color,transparent:true,opacity:0.55,depthWrite:false,blending:THREE.AdditiveBlending,fog:true}));
   const c=document.createElement('canvas'); c.width=64;c.height=64;
   const g=c.getContext('2d');
   const grd=g.createRadialGradient(32,32,1,32,32,32);
   grd.addColorStop(0,'rgba(255,255,255,0.9)');
   grd.addColorStop(1,'rgba(255,255,255,0)');
   g.fillStyle=grd; g.fillRect(0,0,64,64);
-  sprite.material.map=new THREE.CanvasTexture(c);
-  sprite.material.needsUpdate=true;
+  const sprite=new THREE.Sprite(new THREE.SpriteMaterial({color:color,map:new THREE.CanvasTexture(c),transparent:true,opacity:0.55,depthWrite:false,blending:THREE.AdditiveBlending,fog:true}));
   sprite.position.copy(pos);
   sprite.scale.set(2.5,2.5,1);
   sprite.userData.life=1.0;
@@ -701,8 +759,10 @@ let selected=0;
 JETS.forEach((j,i)=>{
   const d=document.createElement('div');
   d.className='card'+(i===0?' sel':'');
+  const trimHex='#'+j.trim.toString(16).padStart(6,'0');
+  d.style.borderColor=trimHex+'80';
   d.innerHTML='<div class="gen '+(j.gen==='5'?'':'g45')+'">'+j.gen+(j.gen==='5'?'TH':'GEN')+'</div>'+
-    '<div class="nm">'+j.name+'</div>'+
+    '<div class="nm" style="color:'+trimHex+';text-shadow:0 0 8px '+trimHex+';">'+j.name+'</div>'+
     '<div class="mt">'+j.flag+' · '+(j.perf.mass/1000).toFixed(1)+'t · M'+j.perf.machMax.toFixed(1)+'</div>';
   d.addEventListener('touchstart',ev=>{ev.preventDefault();selectJet(i);},{passive:false});
   d.addEventListener('click',()=>selectJet(i));
@@ -999,7 +1059,7 @@ function crash(reason){
   player.vel.multiplyScalar(0.15);
 }
 
-/* ================= CAMERA UPDATE ================= */
+/* ================= CAMERA ================= */
 function updateCamera(dt){
   const p=player;
   if(!p.model)return;
@@ -1031,12 +1091,11 @@ function updateCamera(dt){
   p.model.position.copy(p.pos);
   p.model.quaternion.copy(p.quat);
   for(const n of p.nozzles){
-    const flame=n.flame, glow=n.glow;
-    flame.material.opacity=p.abGlow*(0.75+Math.random()*0.20);
-    glow.material.opacity=p.abGlow*0.85;
+    n.flame.material.opacity=p.abGlow*(0.75+Math.random()*0.20);
+    n.glow.material.opacity=p.abGlow*0.85;
     const s=0.7+p.abGlow*1.15;
-    flame.scale.set(s,1,s);
-    glow.scale.set(1.0+p.abGlow*1.3,1.0+p.abGlow*1.3,1);
+    n.flame.scale.set(s,1,s);
+    n.glow.scale.set(1.0+p.abGlow*1.3,1.0+p.abGlow*1.3,1);
   }
   key.position.copy(p.pos).addScaledVector(sunDir,900);
 }
@@ -1073,11 +1132,15 @@ function drawHUD(){
   const bank=Math.atan2(-_rgt.y,_up.y);
   _inv.copy(p.quat).invert();
   _vLoc.copy(p.vel).applyQuaternion(_inv);
+
+  // accent color from active jet
+  const accent='#'+p.cfg.trim.toString(16).padStart(6,'0');
+
   ctx.save();
-  ctx.lineWidth=1.8;ctx.strokeStyle=GREEN;ctx.fillStyle=GREEN;
+  ctx.lineWidth=1.8;ctx.strokeStyle=accent;ctx.fillStyle=accent;
   ctx.font='700 11px -apple-system,Helvetica,Arial';
   ctx.textAlign='center';ctx.textBaseline='middle';
-  ctx.shadowColor='rgba(0,255,238,0.9)';ctx.shadowBlur=10;
+  ctx.shadowColor=accent;ctx.shadowBlur=10;
   ctx.save();
   ctx.beginPath();
   const R=Math.min(w,h)*0.40;
@@ -1116,19 +1179,14 @@ function drawHUD(){
     ctx.moveTo(fpmX,fpmY-7);ctx.lineTo(fpmX,fpmY-16);
     ctx.stroke();
   }
-  // center reticle in magenta
-  ctx.strokeStyle=MAGENTA;
-  ctx.shadowColor='rgba(255,0,170,0.9)';
   ctx.beginPath();
   ctx.moveTo(cx-26,cy);ctx.lineTo(cx-9,cy);
   ctx.moveTo(cx+9,cy);ctx.lineTo(cx+26,cy);
   ctx.moveTo(cx,cy-9);ctx.lineTo(cx,cy-2);
   ctx.stroke();
-  ctx.strokeStyle=GREEN;
-  ctx.shadowColor='rgba(0,255,238,0.9)';
 
-  drawTape(cx-w*0.36,cy,Math.round(p.ias),'KTS',1,true);
-  drawTape(cx+w*0.36,cy,Math.round(p.pos.y*3.28084),'FT',10,false);
+  drawTape(cx-w*0.36,cy,Math.round(p.ias),'KTS',1,true,accent);
+  drawTape(cx+w*0.36,cy,Math.round(p.pos.y*3.28084),'FT',10,false,accent);
 
   ctx.textAlign='center';
   const hdg=p.heading,hw2=w*0.30;
@@ -1160,10 +1218,7 @@ function drawHUD(){
   ctx.font='700 12px -apple-system,Helvetica,Arial';
   ctx.fillText('G',bx,by+50);
   ctx.font='800 22px -apple-system,Helvetica,Arial';
-  ctx.fillStyle=Math.abs(p.g)>p.spec.gLim*0.95?MAGENTA:GREEN;
-  ctx.shadowColor=Math.abs(p.g)>p.spec.gLim*0.95?'rgba(255,0,170,0.9)':'rgba(0,255,238,0.9)';
   ctx.fillText(p.g.toFixed(1),bx,by+74);
-  ctx.fillStyle=GREEN; ctx.shadowColor='rgba(0,255,238,0.9)';
 
   ctx.font='700 12px -apple-system,Helvetica,Arial';
   ctx.fillText('AOA',bx+86,by+50);
@@ -1181,17 +1236,14 @@ function drawHUD(){
   ctx.font='700 12px -apple-system,Helvetica,Arial';
   ctx.fillText('THR',rx,by);
   ctx.font='800 22px -apple-system,Helvetica,Arial';
-  ctx.fillStyle=MAGENTA;
-  ctx.shadowColor='rgba(255,0,170,0.9)';
   ctx.fillText(Math.round(p.throttle*100)+'%',rx,by+24);
-  ctx.fillStyle=GREEN; ctx.shadowColor='rgba(0,255,238,0.9)';
 
   ctx.font='700 12px -apple-system,Helvetica,Arial';
   ctx.fillText('FUEL',rx,by+50);
   ctx.font='800 22px -apple-system,Helvetica,Arial';
-  ctx.fillStyle=p.fuel<0.15?MAGENTA:GREEN;
+  ctx.fillStyle=p.fuel<0.15?MAGENTA:accent;
   ctx.fillText(Math.round(p.fuel*100)+'%',rx,by+74);
-  ctx.fillStyle=GREEN;
+  ctx.fillStyle=accent;
 
   ctx.font='700 12px -apple-system,Helvetica,Arial';
   ctx.fillText('HDG',rx,by+102);
@@ -1202,13 +1254,13 @@ function drawHUD(){
   ctx.strokeRect(tbX,tbY,tbW,tbH);
   ctx.fillStyle=MAGENTA;
   ctx.fillRect(tbX+1,tbY+tbH*(1-p.throttle),tbW-2,tbH*p.throttle);
-  ctx.fillStyle=GREEN;
+  ctx.fillStyle=accent;
   if(p.ab&&p.throttle>0.92){
     ctx.textAlign='center';
     ctx.fillStyle=MAGENTA;
     ctx.font='800 11px -apple-system,Helvetica,Arial';
     ctx.fillText('A/B',tbX+tbW/2,tbY-10);
-    ctx.fillStyle=GREEN;
+    ctx.fillStyle=accent;
   }
 
   ctx.textAlign='center';
@@ -1216,8 +1268,8 @@ function drawHUD(){
   const sy=h-h*0.13;
   let sx=cx-110;
   const flags=[];
-  if(p.gear>0.5)flags.push(['GEAR',GREEN]);
-  if(p.flaps>0.5)flags.push(['FLAP',GREEN]);
+  if(p.gear>0.5)flags.push(['GEAR',accent]);
+  if(p.flaps>0.5)flags.push(['FLAP',accent]);
   if(p.brake>0.5)flags.push(['BRAKE',MAGENTA]);
   if(p.onGround)flags.push(['GND',MAGENTA]);
   flags.forEach(f=>{ctx.fillStyle=f[1];ctx.fillText(f[0],sx,sy);sx+=62;});
@@ -1226,7 +1278,7 @@ function drawHUD(){
     if(Math.floor(performance.now()/250)%2===0){
       ctx.fillStyle=MAGENTA;
       ctx.font='900 22px -apple-system,Helvetica,Arial';
-      ctx.shadowColor='rgba(255,0,170,0.9)';
+      ctx.shadowColor=MAGENTA;
       ctx.fillText('STALL',cx,cy+h*0.30);
     }
   }
@@ -1257,15 +1309,15 @@ function drawHUD(){
   ctx.fillStyle='rgba(255,120,220,0.7)';
   ctx.font='700 10px -apple-system,Helvetica,Arial';
   ctx.fillText('VIEW: '+VIEWS[camState.mode],12,h-26);
-  ctx.fillStyle='rgba(0,255,238,0.7)';
+  ctx.fillStyle=accent;
   ctx.fillText(p.cfg.name.toUpperCase()+'  ·  '+p.cfg.gen+(p.cfg.gen==='5'?'TH GEN':' GEN'),12,h-14);
   ctx.restore();
 }
-function drawTape(x,cy,val,label,step,isLeft){
+function drawTape(x,cy,val,label,step,isLeft,accent){
   const H=150;
   const pxPerUnit=isLeft?1.15:0.085;
   ctx.save();
-  ctx.strokeStyle=GREEN;ctx.fillStyle=GREEN;
+  ctx.strokeStyle=accent;ctx.fillStyle=accent;
   ctx.lineWidth=1.8;
   ctx.font='700 11px -apple-system,Helvetica,Arial';
   ctx.textAlign=isLeft?'right':'left';
@@ -1311,18 +1363,19 @@ function loop(now){
     for(let i=0;i<steps;i++)physics(dt/steps);
     updateAudio();
 
-    // spawn neon trails behind wingtips when fast
     trailTimer+=dt;
     if(trailTimer>0.05 && player.ias>120 && !player.onGround){
       trailTimer=0;
       _fwd.set(0,0,-1).applyQuaternion(player.quat);
       _rgt.set(1,0,0).applyQuaternion(player.quat);
-      _up.set(0,1,0).applyQuaternion(player.quat);
       const wing=player.cfg.wing?player.cfg.wing.span:5;
       const l=player.pos.clone().addScaledVector(_rgt,-wing).addScaledVector(_fwd,-player.cfg.L*0.1);
       const r=player.pos.clone().addScaledVector(_rgt, wing).addScaledVector(_fwd,-player.cfg.L*0.1);
-      spawnTrail(l,0x00ffee);
-      spawnTrail(r,0xff00aa);
+      const trim=player.cfg.trim;
+      const comp=( (trim>>16)&255 ) ^ 0xff;
+      const accent2=(comp<<16) | (((trim>>8)&255)<<8) | (trim&255);
+      spawnTrail(l,trim);
+      spawnTrail(r,accent2);
     }
   }else if(player.model){
     player.model.position.copy(player.pos);
